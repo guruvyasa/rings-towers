@@ -46,6 +46,18 @@
             const poleWidth = 50
             const poleHeight = ringHeight*ringsPerPole+10
 
+            function shuffle(a){
+                let arr = [...a]
+                for(let i=0; i<arr.length; i++){
+                    let index = Math.round(Math.random()*100)%arr.length
+                    let temp = arr[i]
+                    arr[i] = arr[index]
+                    arr[index] = temp
+                }
+                return arr
+            }
+
+
             function getRing({x,y,color}){
                 const div = document.createElement("div")
                 div.classList.add("ring")
@@ -53,7 +65,6 @@
                 div.style.width = `${ringWidth}px` 
                 div.style.height = `${ringHeight}px` 
 
-                gameContainer.appendChild(div)              
                 let r = {
                     px:x,
                     py:y,
@@ -67,7 +78,8 @@
                         this.div.style.top = `${y-ringHeight/2}px`
                     }
                 }
-                r.moveTo({x,y})   
+                // gameContainer.appendChild(div)              
+                // r.moveTo({x,y})   
                 return r             
             }
 
@@ -105,16 +117,25 @@
                     makeRings(){
                         const emptyPoles = Math.floor(this.poles.length/2)
                         const ringsCount = (this.poles.length - emptyPoles)*ringsPerPole
+                        let rings = []
+                        for(let i=0; i<ringsCount; i++){
+                            const color = colors[Math.floor(i/ringsPerPole)]
+                            rings.push(getRing({x:0,y:0,color}))
+                        }
+
+                        //shuffle 
+                        rings = shuffle(rings)
+                        let count=0
                         for(let j=0; j<this.poles.length-emptyPoles; j++){
                             const p = this.poles[j]
                             let baseY = poleHeight+50+ringHeight/2
-
                             for(let i=1; i<=ringsPerPole; i++){
                                 let x = p.px
                                 let y = baseY - (i*ringHeight)
-                                const ring = getRing({x,y,color:colors[j]})
-
-                                p.rings.push(ring)
+                                rings[count].moveTo({x,y})
+                                gameContainer.appendChild(rings[count].div)
+                                p.rings.push(rings[count++])
+                                // p.rings.push(ring)
                             }
             
                         }
