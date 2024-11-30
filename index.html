@@ -37,7 +37,7 @@
             const gameContainer = document.querySelector(".container")
             let movementStarted = false
             const levelsToPoles = new Map()
-            const colors = ["green","indigo","limeyellow","tomato"]
+            const colors = ["green","indigo","lime","tomato"]
             levelsToPoles.set(1,3)
             levelsToPoles.set(2,5)
             levelsToPoles.set(3,7)
@@ -69,7 +69,7 @@
                             //find selected ring
                             for(let pole of g.poles){
                                 for(let ring of pole.rings){
-                                    if (p != pole && ring.selected){
+                                    if (p != pole && ring.selected && p.rings.length < ringsPerPole){
                                         pole.rings.pop()
                                         p.rings.push(ring)
                                         ring.selected=false
@@ -211,6 +211,7 @@
             }
 
             const g = makeGame()
+            g.currentLevel = 2
             g.makePoles()
             g.makeRings()
         }
